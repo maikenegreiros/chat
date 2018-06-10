@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
-    const port = 3000
-    const connection = new WebSocket(`ws://127.0.0.1:${port}`)
+    const port = 8000
+    const connection = new WebSocket(`https://salty-wildwood-16592.herokuapp.com:${port}`)
 
     const container = document.querySelector(".messages-container")
     const inputName = document.querySelector(".input-name")
