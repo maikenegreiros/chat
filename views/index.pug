@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= title
+    div(class="name-container")
+        input(class="input-name" type="text" placeholder="Digite seu nome")
+        button(class="button-name" type="button") Cadastrar
+
+    input(class="message-input" type="text")
+    button(class="send-button" type="button") Enviar
+
+    div(class="messages-container")
