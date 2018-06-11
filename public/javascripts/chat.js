@@ -18,23 +18,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     connection.onopen = () => {
         console.log("connection is open")
-        buttonName.addEventListener("click", () => {
-            user = inputName.value
-        })
-        inputName.addEventListener("keydown", e => {
-            if (e.keyCode === 13) {
-                user = inputName.value
-            }
-        })
-
-        buttonSend.addEventListener("click", () => {
-            send("message", messageInput.value)
-        })
-        messageInput.addEventListener("keydown", e => {
-            if (e.keyCode === 13) {
-                send("message", messageInput.value)
-            }
-        })
 
         const send = (type, data) => {
             var d = {
@@ -58,6 +41,24 @@ window.addEventListener('DOMContentLoaded', () => {
         const cleanInput = input => {
             input.value = ''
         }
+
+        buttonName.addEventListener("click", () => {
+            user = inputName.value
+        })
+        inputName.addEventListener("keydown", e => {
+            if (e.keyCode === 13) {
+                user = inputName.value
+            }
+        })
+
+        buttonSend.addEventListener("click", () => {
+            send("message", messageInput.value)
+        })
+        messageInput.addEventListener("keydown", e => {
+            if (e.keyCode === 13) {
+                send("message", messageInput.value)
+            }
+        })
     }
     connection.onerror = error => {
         console.log(error)
