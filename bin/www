@@ -1,90 +1,39 @@
-#!/usr/bin/env node
+const WebSocketServer = require('websocket').server
+const http = require('http')
+const express = require('express')
+const path = require('path');
+const app = express()
+const server = http.createServer(app)
+const router = require('../routes/index')
+const port = process.env.PORT || 8000
 
-/**
- * Module dependencies.
- */
+app.use(express.static(__dirname + '/../public' ));
+app.set('views', path.join(__dirname, '/../views'));
+app.set('view engine', 'pug');
+app.use("/", router)
 
-var app = require('../app');
-var debug = require('debug')('todo-list:server');
-var http = require('http');
+server.listen(port, function() {
+    console.log(`servidor na porta ${port}`)
+})
 
-/**
- * Get port from environment and store in Express.
- */
+const wsServer = new WebSocketServer({httpServer: server})
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+let clients = []
+let connection
 
-/**
- * Create HTTP server.
- */
+wsServer.on('request', function(request) {
+    console.log(`Conexão de ${request.origin}`)
+    connection = request.accept(null, request.origin)
+    clients.push(connection)
+    console.log(clients.length)
 
-var server = http.createServer(app);
+    connection.on('message', function(message) {
+        if (message.type === "utf8") {
+            console.log(message.utf8Data)
+            clients.forEach(client => client.sendUTF(message.utf8Data))
+        }
+    })
+    connection.on('close', function(connection) {
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+    })
+})
