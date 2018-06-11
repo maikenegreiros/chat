@@ -1,6 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
     const port = 8000
-    const connection = new WebSocket(`wss://salty-wildwood-16592.herokuapp.com:${port}`)
+    // const connection = new WebSocket(`wss://salty-wildwood-16592.herokuapp.com:${port}`)
+    const connection = new WebSocket(`ws://localhost:${port}`)
 
     const container = document.querySelector(".messages-container")
     const inputName = document.querySelector(".input-name")
@@ -16,31 +17,31 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const colors = ["blue", "green", "gray", "red"]
 
+    const send = (type, data) => {
+        var d = {
+            "type": type,
+            "data": {"user": user, "message": data}
+        }
+        connection.send(JSON.stringify(d))
+        cleanInput(messageInput)
+    }
+    const appendMessage = (data) => {
+        console.log(data)
+        div = document.createElement('div')
+        pUser = document.createElement('p')
+        p = document.createElement('p')
+        container.appendChild(div)
+        div.appendChild(pUser)
+        div.appendChild(p)
+        pUser.appendChild(document.createTextNode(JSON.parse(data.data).data.user))
+        p.appendChild(document.createTextNode(JSON.parse(data.data).data.message))
+    }
+    const cleanInput = input => {
+        input.value = ''
+    }
+
     connection.onopen = () => {
         console.log("connection is open")
-
-        const send = (type, data) => {
-            var d = {
-                "type": type,
-                "data": {"user": user, "message": data}
-            }
-            connection.send(JSON.stringify(d))
-            cleanInput(messageInput)
-        }
-        const appendMessage = (data) => {
-            console.log(data)
-            div = document.createElement('div')
-            pUser = document.createElement('p')
-            p = document.createElement('p')
-            container.appendChild(div)
-            div.appendChild(pUser)
-            div.appendChild(p)
-            pUser.appendChild(document.createTextNode(JSON.parse(data.data).data.user))
-            p.appendChild(document.createTextNode(JSON.parse(data.data).data.message))
-        }
-        const cleanInput = input => {
-            input.value = ''
-        }
 
         buttonName.addEventListener("click", () => {
             user = inputName.value
