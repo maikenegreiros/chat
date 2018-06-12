@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const WebSocketServer = require('websocket').server
 const http = require('http')
 const express = require('express')
