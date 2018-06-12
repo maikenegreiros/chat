@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-    const port = 50335
+    const port = 8000
     const connection = new WebSocket(`wss://chatmn.herokuapp.com:${port}`)
     // const connection = new WebSocket(`ws://localhost:${port}`)
 
