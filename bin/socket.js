@@ -5,6 +5,7 @@ const path = require('path');
 const app = express()
 const server = http.createServer(app)
 const router = require('../routes/index')
+process.env.PORT = 8000
 const port = process.env.PORT || 8000
 
 app.use(express.static(__dirname + '/../public' ));
